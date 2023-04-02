@@ -1,0 +1,247 @@
+---
+title: "My_R_Practices3"
+output: html_document
+date: "2023-03-28"
+---
+
+```{r}
+getwd()
+setwd("C:\\Data Science\\My_R_Projects\\Time_Series")
+```
+
+
+```{r}
+library(lubridate)
+today()
+
+now()
+```
+
+```{r}
+x="2014-10-12"
+#YYYY-MM-DD
+
+# Examine structure of x
+str(x)
+```
+
+```{r}
+# Use as.Date() to interpret x as a date
+dt1 <- as.Date(x) 
+str(dt1)
+
+# the standard format for Oct 12, 2014 is "%b %d, %Y"
+    # %b represents the abbreviated month name (e.g., Jan, Feb, Mar).
+    # %d represents the day of the month (e.g., 01, 02, 03).
+    # %Y represents the year with century (e.g., 2022, 2023).
+# In R, the standard format for representing dates is the ISO 8601 format, which uses the year first, followed by the month and then the day. This is why the as.Date() function, using the format " %b %d, %Y", produces the output "2014-10-12".
+date_str <- "Oct 12, 2014"
+date <- as.Date(date_str, format = "%b %d, %Y")
+date
+
+# To get the desired output format of "10-12-2014", you can use the format() function to convert the Date object back to a string with the desired format. You cannot apply the format() function to a string directly. Here's an example:
+date_str <- "Oct 12, 2014"
+date <- as.Date(date_str, format = "%b %d, %Y")
+formatted_date <- format(date, "%m-%d-%Y")
+print(formatted_date)
+```
+
+
+```{r}
+##### convert non standard dates to standard
+ # the format argument is set to "%m/%d/%Y" to tell R the format of the date string
+dt2 = as.Date("11/14/2005", format = "%m/%d/%Y")
+str(dt2)
+
+dt3 = as.Date("May 16, 1995", format = "%B %d, %Y")
+str(dt3)
+```
+```{r}
+############ Date calculations
+
+dt2-dt3
+dt2>dt3
+```
+
+```{r}
+############################################# 20 Examples of formats:############################################
+# list of symbols used in R for formatting dates and times:    
+    # %Y: Four-digit year (e.g., 2022)
+    # %y: Two-digit year (e.g., 22)
+    # %C: Century (e.g., 20 for the 21st century)
+    # %m: Numeric month (e.g., 01 for January)
+    # %B: Full month name (e.g., January)
+    # %b: Abbreviated month name (e.g., Jan)
+    # %h: Same as %b
+    # %d: Day of the month (e.g., 01)
+    # %e: Same as %d, but with a leading space for single-digit days
+    # %j: Day of the year (e.g., 001 for January 1st)
+    # %U: Week number of the year (Sunday as the first day of the week)
+    # %W: Week number of the year (Monday as the first day of the week)
+    # %w: Numeric day of the week (0 for Sunday, 6 for Saturday)
+    # %A: Full weekday name (e.g., Monday)
+    # %a: Abbreviated weekday name (e.g., Mon)
+    # %u: Numeric day of the week (1 for Monday, 7 for Sunday)
+    # %H: Hour (24-hour clock) (e.g., 23 for 11 PM)
+    # %I: Hour (12-hour clock) (e.g., 11 PM)
+    # %M: Minute (e.g., 59)
+    # %S: Second (e.g., 59)
+    # %s: Seconds since 1970-01-01 00:00:00 UTC
+    # %f: Microseconds (e.g., 999999)
+    # %z: Time zone offset from UTC (e.g., -0800)
+    # %Z: Time zone abbreviation (e.g., PST)
+    # %G: ISO 8601 week-based year
+    # %g: Last two digits of ISO 8601 week-based year
+    # %V: ISO 8601 week number
+```
+
+
+```{r}
+# Example using "%B %d, %Y"
+date1 <- as.Date("January 01, 2022", format = "%B %d, %Y")
+date1
+```
+```{r}
+# Example using "%m/%d/%Y"
+date2 <- as.Date("01/01/2022", format = "%m/%d/%Y")
+date2
+```
+
+```{r}
+# Example using "%b %d, %Y"
+date3 <- as.Date("Jan 01, 2022", format = "%b %d, %Y")
+date3
+```
+
+```{r}
+# Example using "%B %d, %Y"
+date4 <- as.Date("January 01, 2022", format = "%B %d, %Y")
+date4
+```
+
+```{r}
+# Example using "%m/%d/%Y"
+date5 <- as.Date("01/01/2022", format = "%m/%d/%Y")
+date5
+```
+
+
+```{r}
+# Example using "%b %d, %Y"
+date6 <- as.Date("Jan 01, 2022", format = "%b %d, %Y")
+date6
+```
+
+```{r}
+# Example using "%Y/%m/%d"
+date7 <- as.Date("2022/01/01", format = "%Y/%m/%d")
+date7
+```
+
+```{r}
+# Example using "%m-%d-%y"
+date8 <- as.Date("01-01-22", format = "%m-%d-%y")
+date8
+```
+
+
+```{r}
+# Example using "%A, %d %B %Y"
+date9 <- as.Date("Saturday, 01 January 2022", format = "%A, %d %B %Y")
+date9
+```
+
+```{r}
+# Example using "%Y-%m-%d"
+date10 <- as.Date("2022-01-01", format = "%Y-%m-%d")
+date10
+```
+
+```{r}
+# Example using "%d %B %Y"
+date11 <- as.Date("01 January 2022", format = "%d %B %Y")
+date11
+```
+
+```{r}
+# Example using "%m/%d/%y %I:%M %p"
+datetime1 <- as.POSIXct("01/01/22 12:00 PM", format = "%m/%d/%y %I:%M %p")
+datetime1
+```
+
+```{r}
+# Example using "%m/%d/%Y %H:%M:%S"
+datetime2 <- as.POSIXct("01/01/2022 12:00:00", format = "%m/%d/%Y %H:%M:%S")
+datetime2
+```
+
+```{r}
+# Example using "%m/%d/%Y %H:%M"
+datetime3 <- as.POSIXct("01/01/2022 12:00", format = "%m/%d/%Y %H:%M")
+datetime3
+```
+
+```{r}
+# Example using "%m/%d/%Y %I:%M %p"
+datetime4 <- as.POSIXct("01/01/2022 12:00 PM", format = "%m/%d/%Y %I:%M %p")
+datetime4
+```
+
+```{r}
+# Example using "%Y-%m-%d %H:%M:%S"
+datetime5 <- as.POSIXct("2022-01-01 12:00:00", format = "%Y-%m-%d %H:%M:%S")
+datetime5
+```
+
+```{r}
+# Example using "%a %b %d %H:%M:%S %Y"
+datetime6 <- as.POSIXct("Sun Dec 31 23:59:59 2023", format = "%a %b %d %H:%M:%S %Y")
+datetime6
+```
+
+```{r}
+# Example using "%Y-%m-%d %H:%M:%S.%f"
+datetime7 <- as.POSIXct("2023-12-31 23:59:59.999999", format = "%Y-%m-%d %H:%M:%S.%f")
+datetime7
+```
+
+```{r}
+# Example using "%d/%m/%y %I:%M %p"
+datetime8 <- as.POSIXct("31/12/23 11:59 PM", format = "%d/%m/%y %I:%M %p")
+datetime8
+```
+
+```{r}
+# Example using "%Y%m%d %H:%M:%S"
+datetime9 <- as.POSIXct("20231231 23:59:59", format = "%Y%m%d %H:%M:%S")
+datetime9
+```
+
+```{r}
+# Example using "%A, %B %d, %Y at %I:%M %p"
+datetime10 <- as.POSIXct("Sunday, December 31, 2023 at 11:59 PM", format = "%A, %B %d, %Y at %I:%M %p")
+datetime10
+```
+```{r}
+tm1 = as.POSIXct("2013-07-24 23:55:26")
+tm1
+
+tm3 = as.POSIXct("2010-12-01 11:42:03", tz = "GMT") #specify zone
+tm3
+
+tm3>tm1
+
+tm1-tm3
+```
+
+
+
+
+
+
+
+
+
+
+
+
