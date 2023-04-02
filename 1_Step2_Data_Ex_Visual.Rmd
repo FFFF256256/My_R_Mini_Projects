@@ -1,0 +1,96 @@
+---
+title: "My_R_Practices2"
+output: html_document
+date: "2023-03-23"
+---
+
+```{r}
+getwd()
+setwd("C:\\Data Science\\My_R_Projects\\Time_Series")
+
+```
+
+
+```{r}
+# This code loads the "iris" dataset into R, which is a built-in dataset in R. The "iris" dataset contains measurements of different parts of flowers, including their sepals and petals, as well as their species. Once the dataset is loaded, it can be used for data analysis or visualization
+data(iris)
+
+# the names of the columns in the "iris" dataset.
+names(iris)
+
+summary(iris)
+```
+
+
+```{r}
+##examine data distribution
+
+# The given R code creates a histogram for the Sepal.Length variable of the iris dataset. The histogram displays the distribution of values of Sepal.Length in the dataset.
+hist(iris$Sepal.Length) 
+
+# This R code creates a boxplot of the Sepal Length variable in the iris dataset. The boxplot shows the minimum and maximum values, the lower and upper quartiles, and the median of the Sepal Length.
+boxplot(iris$Sepal.Length,main="5 Stat Summary of iris",xlab="Sepal Length")
+```
+
+```{r}
+#relation bw 2 variables
+plot(iris$Sepal.Length,iris$Sepal.Width)
+```
+
+```{r}
+#PLOTTING CATEGORICAL VARIABLES
+
+counts <- table(iris$Species)
+counts
+barplot(counts, main="Iris Species", xlab="Samples/species")
+
+barplot(counts, main="Iris Species", xlab="Samples/species",horiz=TRUE)
+
+```
+
+
+```{r}
+## Improved data viz
+library(ggplot2)
+
+# relation bw Sepal length and width of 3 different species
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species)
+```
+
+```{r}
+# We see that Iris setosa flowers have the narrowest petals.
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species, size = Petal.Width)
+
+```
+
+```{r}
+##Add labels to the plot
+qplot(Sepal.Length, Petal.Length, data = iris, color = Species,
+    xlab = "Sepal Length", ylab = "Petal Length",
+    main = "Sepal vs. Petal Length in Iris data")
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(data = iris, aes(x=Sepal.Length, y=Sepal.Width, colour=Species))+ geom_point()
+
+
+```
+
+```{r}
+ggplot(iris, aes(x=Sepal.Length)) + geom_histogram()
+```
+
+```{r}
+ggplot(iris, aes(x=Sepal.Length, fill=Species))+ geom_histogram()
+```
+
+
+```{r}
+ggplot(iris, aes(x=Species, y=Sepal.Length)) + geom_boxplot()
+
+ggplot(iris, aes(x=Species, y=Sepal.Length, fill=Species)) + geom_boxplot()
+
+```
+
