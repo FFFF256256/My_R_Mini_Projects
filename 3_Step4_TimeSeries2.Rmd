@@ -1,0 +1,208 @@
+---
+title: "My_R_Practices4"
+output: html_document
+date: "2023-04-02"
+---
+
+```{r}
+getwd()
+setwd("C:\\Data Science\\My_R_Projects\\Time_Series")
+```
+
+```{r}
+library(lubridate)
+today()
+
+now()
+```
+
+```{r}
+##get standard dates
+ymd("2017-01-31") #when the year comes first
+ymd(20170101)
+
+# The first example takes a character vector in the "YYYY-MM-DD" format, while the second example takes a numeric value in the YYYYMMDD format. The ymd() function is part of the lubridate package in R, and it is used to parse character vectors and convert them into date objects.
+```
+
+
+```{r}
+mdy("January 31st, 2017") #when the month comes first
+# The code mdy("January 31st, 2017") is used to convert a date string in the "Month-Day-Year" format into a standard date format. It will recognize the order of the month and day, even if the day is written with a suffix like "st" or "nd".
+```
+
+```{r}
+dmy("31-Jan-2017")#when the day comes first
+# It is used to convert a date string in the "Day-Month-Year" format into a standard date format. It will recognize the order of the day and month, even if the month is written as an abbreviation.
+```
+
+
+```{r}
+#times
+
+ymd_hm("2017-01-01 11:30", tz = "UTC")
+# It is used to convert a date-time string in the "Year-Month-Day Hour:Minute" format into a standard date-time format. The tz argument is used to specify the timezone of the input date-time string.
+```
+
+
+```{r}
+mdy("Mar 5, 1940", tz = "GMT")
+# It is used to convert a date string in the "Month Day, Year" format into a standard date format. The tz argument sets the timezone to "GMT". This function will recognize the order of the month and day, and also takes into account the time zone of the date.
+```
+
+
+```{r}
+######get components out
+
+datetime = ymd_hms("2015-05-11 12:34:56")
+datetime
+year(datetime) #year
+month(datetime) #month
+mday(datetime) #day
+```
+```{r}
+getwd()
+n=read.csv("Section 2/PlotNDMI.csv")
+head(n)
+```
+```{r}
+class(n$Date)
+
+# The resulting standard dates are stored in a new column n$Date2 in the same data frame n.
+n$Date2=dmy(n$Date) #lubridate
+class(n$Date2)
+
+n$Year=year(n$Date2)
+n$Month=month(n$Date2)
+
+head(n)
+```
+```{r}
+# The NDMI~Month+Year argument specifies the formula for grouping the data, where NDMI is the variable being aggregated and Month and Year are the grouping variables. The n argument specifies the data frame to be used, and the mean argument specifies the function to be used for aggregation
+
+# The tilde symbol (~) is used to specify the formula for the aggregation function. In this case, it indicates that the NDMI variable should be aggregated by the Month and Year variables. 
+ndmia=aggregate(NDMI~Month+Year,n,mean)
+head(ndmia)
+```
+
+```{r}
+#### on a data frame
+# install.packages("nycflights13")
+library(nycflights13)
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+# The R code flights %>% select(year, month, day, hour, minute, arr_time) selects specific columns (year, month, day, hour, minute, and arr_time) from the flights data frame. The %>% symbol is a pipe operator, which takes the output of the previous function (in this case, flights) and pipes it into the next function (select). This code can be read as "take the flights data frame and select the columns for year, month, day, hour, minute, and arr_time."
+flights %>%
+  select (year, month,day, hour, minute, arr_time)
+require(dplyr)
+##combine the individual bits
+
+# This one does something similar, but also creates a new column departure by combining the year, month, day, hour, and minute columns using the make_datetime function. The %>% symbol is used twice to pipe the output of the select function into the mutate function. This code can be read as "take the flights data frame and select the columns for year, month, day, hour, and minute, then create a new column departure by combining these columns into a single datetime column using the make_datetime function."
+flights %>%
+  select(year, month, day, hour, minute) %>%
+  mutate(departure = make_datetime(year, month,day, hour, minute)
+  )
+# The mutate() function takes a data frame as its first argument and then defines new columns using expressions that reference existing columns. 
+```
+
+```{r}
+getwd()
+stck <- read.csv("section 2/5stocks.csv")
+stck
+```
+```{r}
+head(stck,n=50)
+tail(stck,n=10)
+
+ncol(stck)
+```
+```{r}
+smove=stck[,2:6]
+
+head(smove)
+
+smove=na.omit(smove)
+```
+```{r}
+##### convert data to a time series/ts object
+#monthly frequency=12
+#yearly data frequency=1
+#start=c(2001, 7) #This specifies that the time series starts in July 2001.
+#In the code c(2001, 7), the c() function creates a vector with two elements: 2001 and 7.(concatenate)
+myts = ts(smove, start=c(2001, 7), end=c(2017, 5), frequency=12)
+myts
+plot(myts)
+```
+```{r}
+# plot.ts() is a specific function designed for plotting time series objects, and it provides additional options and capabilities that may not be available in the generic plot() function. For example, the plot.ts() function allows you to add multiple time series to the same plot, customize the appearance of the x and y axis labels, and specify the range of the y axis.
+plot.ts(myts)
+```
+
+```{r}
+start(myts)
+end(myts)
+frequency(myts)
+```
+```{r}
+# subset the time series (June 2014 to December 2017)
+# window() is a function used to extract a subset of a time series object.
+myts2 = window(myts, start=c(2014, 6), end=c(2017, 4))
+plot(myts2)
+```
+```{r}
+plot.ts(myts2)
+```
+```{r}
+install.packages("ggfortify")   # Install ggfortify package
+if ("package:ggplot2" %in% search()) detach(package:ggplot2, unload=TRUE)
+install.packages("ggplot2")
+
+install.packages("ggplot2", version = "4.2.3")
+library(ggplot2)
+library(ggfortify)             # Load ggfortify package
+autoplot(myts)
+```
+```{r}
+# When you pass a time series object like myts to autoplot(), it will create a plot of the time series.
+# When you pass facets = FALSE to autoplot(), it will create a single plot with all the time series data in one panel. This is useful if you want to compare the entire time series at once, or if you have a small number of time series to plot.
+autoplot(myts, facets = FALSE) #time series of stocks on one plot
+```
+```{r}
+# xts is a package in R that provides a data structure for time series data called an "eXtensible Time Series" object, or xts object for short. An xts object is similar to a ts object, but with additional features such as subsetting and merging of time series data. The xts package is built on top of R's zoo package, which is a widely used package for time series data.
+
+# xts objects are typically used for financial and economic time series data, but can be used for any type of time series data. They have a number of useful methods and functions for working with time series data, such as subsetting, merging, aggregating, and plotting.
+library(xts)
+autoplot(as.xts(myts), ts.colour = 'green')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
